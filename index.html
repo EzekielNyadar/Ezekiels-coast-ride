@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rave Check: The Rema Fan Quiz</title>
+<style>
+:root{--bg:#0e0a1a;--card:#1a1330;--ink:#f4f0ff;--mute:#a79cc8;--acc:#ff3d81;--acc2:#7c5cff;--ok:#22c55e;--bad:#ef4444;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+.w{max-width:480px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:34px;margin:8px 0 4px;letter-spacing:-1px;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mute);margin:0 0 20px}
+.c{background:var(--card);border-radius:16px;padding:18px;margin-bottom:14px}
+button,input{font:inherit}
+.b{display:block;width:100%;padding:14px;border:0;border-radius:12px;background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;font-weight:700;margin-top:10px;cursor:pointer;text-align:center;text-decoration:none}
+.b.g{background:transparent;border:1px solid var(--acc2)}
+.o{display:block;width:100%;text-align:left;padding:13px;margin-top:8px;border-radius:12px;border:1px solid #3a2f63;background:transparent;color:var(--ink);cursor:pointer}
+.o.ok{background:var(--ok);border-color:var(--ok);color:#04230f}.o.bad{background:var(--bad);border-color:var(--bad)}
+input{width:100%;padding:13px;border-radius:12px;border:1px solid #3a2f63;background:#0e0a1a;color:var(--ink)}
+.bar{height:6px;background:#2a2149;border-radius:9px;overflow:hidden;margin-bottom:12px}.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.big{font-size:56px;font-weight:800;margin:0}.tier{font-size:22px;color:var(--acc);font-weight:700}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2149}
+.fine{color:var(--mute);font-size:12px;text-align:center;margin-top:18px}
+.hide{display:none}
+</style></head>
+<body><div class="w">
+<h1>Rave Check</h1>
+<p class="sub">How well do you know Rema? The unofficial fan quiz.</p>
+
+<div id="home" class="c">
+<input id="nick" placeholder="Your nickname" maxlength="20">
+<button class="b" id="start">Start the check</button>
+<button class="b g" id="lbBtn">My best scores</button>
+<button class="b g" id="inv">Invite friends</button>
+<div id="invbox" class="hide" style="margin-top:10px"><input id="invtxt" readonly><a class="b g" id="iwa" target="_blank" rel="noopener">Share on WhatsApp</a><a class="b g" id="itw" target="_blank" rel="noopener">Share on X</a></div>
+<a class="b" id="don2" href="https://flutterwave.com/pay/r0f7yvqqodn9" target="_blank" rel="noopener">Support Rave Check</a>
+</div>
+
+<div id="quiz" class="c hide">
+<div class="bar"><i id="bar"></i></div>
+<div class="sub" id="count"></div>
+<h2 id="q" style="margin:0 0 6px;font-size:20px"></h2>
+<div id="opts"></div>
+<button class="b hide" id="next">Next</button>
+</div>
+
+<div id="res" class="c hide" style="text-align:center">
+<p class="big" id="score"></p>
+<p class="tier" id="tier"></p>
+<p class="sub" id="msg"></p>
+<button class="b" id="share">Share my result</button>
+<a class="b g" id="wa" target="_blank" rel="noopener">WhatsApp</a>
+<a class="b g" id="tw" target="_blank" rel="noopener">X</a>
+<a class="b" id="don" target="_blank" rel="noopener" style="display:none">Support Rave Check</a>
+<button class="b g" id="again">Play again</button>
+</div>
+
+<div id="lb" class="c hide">
+<h2 style="margin-top:0">My best scores</h2>
+<div id="lbList"></div>
+<button class="b g" id="back">Back</button>
+</div>
+
+<p class="fine">Unofficial fan quiz. Not affiliated with Rema or Mavin Records.</p>
+</div>
+<script>
+var DONATE_URL="https://flutterwave.com/pay/r0f7yvqqodn9";
+var SHARE_URL="https://claude.ai/artifact/P5xy38ZcCUmvLLaave7mEx"; // paste your Flutterwave payment link between the quotes
+var Q=[
+["What is Rema's real name?",["Divine Ikubor","David Adeleke","Michael Collins Ajereh","Damini Ogulu"],0],
+["Which Nigerian city is Rema from?",["Lagos","Benin City","Port Harcourt","Kano"],1],
+["Which record label is Rema signed to?",["YBNL","Mavin Records","Chocolate City","Starboy"],1],
+["Who founded the label that signed Rema?",["Don Jazzy","Wizkid","Olamide","P-Square"],0],
+["Which 2019 single was Rema's big breakout?",["Dumebi","Soundgasm","Ozeba","Ginger Me"],0],
+["Which artist is on the global remix of Calm Down?",["Beyonce","Selena Gomez","Rihanna","Dua Lipa"],1],
+["What is the title of Rema's 2022 debut album?",["Heis","Rave & Roses","Dumebi Nights","Afro Rave"],1],
+["What year was Rema born?",["1998","1999","2000","2002"],2],
+["What is the title of Rema's 2019 debut EP?",["Rema","Iron Man","Raves","Mavin Gold"],0],
+["Calm Down peaked at what position on the Billboard Hot 100?",["No. 1","No. 3","No. 10","No. 25"],1],
+["What is the title of Rema's 2024 studio album?",["Heis","Ravage","Ozeba","Rave & Roses 2"],0],
+["Which 2024 song is a standout single from his album Heis?",["Ozeba","Dumebi","Ginger Me","Iron Man"],0],
+["His first Grammy nomination was in which category?",["Best Global Music Album","Best New Artist","Best Rap Album","Best Pop Vocal Album"],0],
+["Which month was Rema born in?",["January","May","August","December"],1],
+["Which brother of Don Jazzy introduced Rema to Mavin?",["D'Banj","D'Prince","Dr Sid","Reekado"],1],
+["In which year did Rema join Mavin Records?",["2016","2017","2018","2020"],2],
+["Which of these is a 2019 Rema EP?",["Bad Commando","Rave Nation","Ravers Only","Heis Deluxe"],0],
+["Which artist features on Benin Boys from Heis?",["Shallipopi","Asake","Burna Boy","Davido"],0],
+["Which artist features on War Machine from Heis?",["ODUMODUBLVCK","Zlatan","Rema Jr","Fireboy DML"],0],
+["Which Headies award did Rema win in 2019?",["Next Rated","Artiste of the Year","Album of the Year","Best Rap Single"],0],
+["Calm Down passed how many YouTube views?",["100 million","500 million","1 billion","5 billion"],2],
+["What is Rema's 2020 compilation project called?",["Rema Compilation","Rave Tape","Mavin Vol 1","Ginger Me Deluxe"],0],
+["Which sound label does Rema use for his style?",["Afro-rave","Amapiano","Highlife","Gqom"],0],
+["Which of these is a 2025 Rema single?",["Baby (Is It a Crime)","Dumebi","Ginger Me","Iron Man"],0],
+["Benin City is the capital of which Nigerian state?",["Edo","Delta","Ogun","Rivers"],0],
+["In which year was Dumebi released?",["2017","2018","2019","2021"],2],
+["In which year was the album Rave & Roses released?",["2020","2021","2022","2023"],2],
+["In which year did the Calm Down remix with Selena Gomez come out?",["2021","2022","2023","2024"],1],
+["In which year was the album Heis released?",["2022","2023","2024","2025"],2],
+["Which of these is a Rema EP?",["Ravage","Rave Check","Ozeba","Heis Lite"],0]
+];
+var T=[[28,"Certified Raver","You are the real deal."],[22,"Rave Royalty","Almost perfect. Respect."],[16,"Die-Hard Fan","You know your Rema."],[10,"Casual Listener","Good ears. Time to dig deeper."],[0,"Newcomer","Welcome. Hit replay and learn."]];
+var $=function(i){return document.getElementById(i)};
+var i=0,s=0,nick="",tier="",R=[];
+function sh(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1)),t=a[k];a[k]=a[j];a[j]=t}return a}
+function mix(){return sh(Q).map(function(q){var o=sh(q[1].map(function(t,k){return[t,k===q[2]]}));return[q[0],o.map(function(x){return x[0]}),o.findIndex(function(x){return x[1]})]})}
+function show(id){["home","quiz","res","lb"].forEach(function(x){$(x).classList.toggle("hide",x!==id)})}
+function get(){try{return JSON.parse(localStorage.getItem("rc_scores")||"[]")}catch(e){return[]}}
+function put(a){try{localStorage.setItem("rc_scores",JSON.stringify(a))}catch(e){}}
+try{$("nick").value=localStorage.getItem("rc_nick")||""}catch(e){}
+$("start").onclick=function(){nick=$("nick").value.trim()||"Raver";try{localStorage.setItem("rc_nick",nick)}catch(e){}i=0;s=0;R=mix();show("quiz");ask()};
+function ask(){var q=R[i];$("q").textContent=q[0];$("count").textContent="Question "+(i+1)+" of "+Q.length;$("bar").style.width=(i/Q.length*100)+"%";$("next").classList.add("hide");$("opts").innerHTML="";
+q[1].forEach(function(t,k){var b=document.createElement("button");b.className="o";b.textContent=t;b.onclick=function(){pick(k)};$("opts").appendChild(b)})}
+function pick(k){var q=R[i],bs=$("opts").children;if($("next").className.indexOf("hide")<0)return;
+for(var j=0;j<bs.length;j++){if(j===q[2])bs[j].classList.add("ok");else if(j===k)bs[j].classList.add("bad")}
+if(k===q[2])s++;$("next").textContent=i===Q.length-1?"See my result":"Next";$("next").classList.remove("hide")}
+$("next").onclick=function(){i++;if(i<Q.length)ask();else finish()};
+function finish(){var t=T.filter(function(x){return s>=x[0]})[0];tier=t[1];
+$("score").textContent=s+"/"+Q.length;$("tier").textContent=tier;$("msg").textContent=t[2];
+var a=get();a.push({n:nick,s:s,t:tier,d:new Date().toLocaleDateString()});a.sort(function(x,y){return y.s-x.s});put(a.slice(0,10));
+var txt="I got "+s+"/"+Q.length+" on Rave Check and I am a "+tier+". Can you beat me?";var url=SHARE_URL;
+$("wa").href="https://wa.me/?text="+encodeURIComponent(txt+" "+url);
+$("tw").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(txt)+"&url="+encodeURIComponent(url);
+$("share").onclick=function(){if(navigator.share){navigator.share({text:txt,url:url}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(txt+" "+url);$("share").textContent="Copied!"}};
+$("share").textContent="Share my result";
+if(DONATE_URL){$("don").href=DONATE_URL;$("don").style.display="block"}
+show("res")}
+$("again").onclick=function(){show("home")};
+$("lbBtn").onclick=function(){var a=get(),h="";if(!a.length)h='<p class="sub">No scores yet. Take the quiz first.</p>';
+a.forEach(function(r,k){h+='<div class="row"><span>'+(k+1)+". "+r.n.replace(/[<>&]/g,"")+'</span><span>'+r.s+"/"+Q.length+" · "+r.t+"</span></div>"});$("lbList").innerHTML=h;show("lb")};
+$("back").onclick=function(){show("home")};
+$("inv").onclick=function(){var t="Think you know Rema? Take the Rave Check and see your rank.",u=SHARE_URL,f=t+" "+u;$("invtxt").value=f;$("iwa").href="https://wa.me/?text="+encodeURIComponent(f);$("itw").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(t)+"&url="+encodeURIComponent(u);$("invbox").classList.remove("hide");$("invtxt").select();try{if(navigator.share)navigator.share({text:t,url:u}).catch(function(){})}catch(e){}};
+</script></body></html>
